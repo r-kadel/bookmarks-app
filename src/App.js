@@ -1,56 +1,42 @@
-import React, { Component } from 'react';
-import AddBookmark from './AddBookmark/AddBookmark';
-import BookmarkList from './BookmarkList/BookmarkList';
-import Nav from './Nav/Nav';
-import config from './config';
-import './App.css';
-
-const bookmarks = [
-  // {
-  //   id: 0,
-  //   title: 'Google',
-  //   url: 'http://www.google.com',
-  //   rating: '3',
-  //   desc: 'Internet-related services and products.'
-  // },
-  // {
-  //   id: 1,
-  //   title: 'Thinkful',
-  //   url: 'http://www.thinkful.com',
-  //   rating: '5',
-  //   desc: '1-on-1 learning to accelerate your way to a new high-growth tech career!'
-  // },
-  // {
-  //   id: 2,
-  //   title: 'Github',
-  //   url: 'http://www.github.com',
-  //   rating: '4',
-  //   desc: 'brings together the world\'s largest community of developers.'
-  // }
-];
+import React, { Component } from 'react'
+import AddBookmark from './AddBookmark/AddBookmark'
+import BookmarkList from './BookmarkList/BookmarkList'
+import EditBookmark from './EditBookmark/EditBookmark'
+import Nav from './Nav/Nav'
+import config from './config'
+import './App.css'
+import { Route } from 'react-router-dom'
+import BookmarksContext from './BookmarksContext'
 
 class App extends Component {
   state = {
-    page: 'list',
-    bookmarks,
-    error: null,
-  };
+    bookmarks: [],
+    error: null
+  }
 
-  changePage = (page) => {
+  changePage = page => {
     this.setState({ page })
   }
 
   setBookmarks = bookmarks => {
     this.setState({
       bookmarks,
-      error: null,
-      page: 'list',
+      error: null
     })
   }
 
   addBookmark = bookmark => {
     this.setState({
-      bookmarks: [ ...this.state.bookmarks, bookmark ],
+      bookmarks: [...this.state.bookmarks, bookmark]
+    })
+  }
+
+  deleteBookmark = id => {
+    const updatedBookmarks = this.state.bookmarks.filter(
+      bookmark => bookmark.id !== id
+    )
+    this.setState({
+      bookmarks: updatedBookmarks
     })
   }
 
@@ -58,8 +44,8 @@ class App extends Component {
     fetch(config.API_ENDPOINT, {
       method: 'GET',
       headers: {
-        'content-type': 'application/json',
-        'Authorization': `Bearer ${config.API_KEY}`
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${config.API_KEY}`
       }
     })
       .then(res => {
@@ -73,27 +59,25 @@ class App extends Component {
   }
 
   render() {
-    const { page, bookmarks } = this.state
+    const contextValue = {
+      bookmarks: this.state.bookmarks,
+      addBookmark: this.addBookmark,
+      deleteBookmark: this.deleteBookmark,
+      setBookmarks: this.setBookmarks
+    }
     return (
-      <main className='App'>
+      <main className="App">
         <h1>Bookmarks!</h1>
-        <Nav clickPage={this.changePage} />
-        <div className='content' aria-live='polite'>
-          {page === 'add' && (
-            <AddBookmark
-              onAddBookmark={this.addBookmark}
-              onClickCancel={() => this.changePage('list')}
-            />
-          )}
-          {page === 'list' && (
-            <BookmarkList
-              bookmarks={bookmarks}
-            />
-          )}
-        </div>
+        <BookmarksContext.Provider value={contextValue}>
+          <Nav />
+          <div className="content" aria-live="polite">
+            <Route path="/add-bookmark" component={AddBookmark} />
+            <Route exact path="/" component={BookmarkList} />
+            <Route path="/edit/:bookmarkId" component={EditBookmark} />
+          </div>
+        </BookmarksContext.Provider>
       </main>
-    );
+    )
   }
 }
-
-export default App;
+export default App
