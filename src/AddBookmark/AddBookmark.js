@@ -51,6 +51,7 @@ class AddBookmark extends Component {
         rating.value = ''
         this.context.addBookmark(data)
       })
+      .then(this.props.history.goBack())
       .catch(error => {
         this.setState({ error })
       })

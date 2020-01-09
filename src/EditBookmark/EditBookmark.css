@@ -1,0 +1,39 @@
+.EditBookmarkForm {
+   text-align: left;
+ }
+ 
+ .EditBookmarkForm input,
+ .EditBookmarkForm textarea {
+   display: block;
+   text-align: left;
+   margin-top: 5px;
+   margin-bottom: 15px;
+   width: calc(100% - 16px - 2px);
+   padding: 5px 8px;
+   border: 1px solid #ddd;
+ }
+ 
+ .EditBookmarkForm label {
+   margin-top: 10px;
+ }
+ 
+ .EditBookmarkButtons {
+   text-align: center;
+ }
+ 
+ .EditBookmark__required {
+   color: #a51414;
+ }
+ 
+ .EditBookmarError p {
+   color: #a51414;
+   margin-bottom: 5px;
+ }
+
+ .EditBookmarkSubmit {
+    margin-right: 1rem;
+ }
+
+ .capital {
+    text-transform: capitalize;
+ }

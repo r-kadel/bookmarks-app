@@ -14,10 +14,6 @@ class App extends Component {
     error: null
   }
 
-  changePage = page => {
-    this.setState({ page })
-  }
-
   setBookmarks = bookmarks => {
     this.setState({
       bookmarks,
@@ -58,12 +54,22 @@ class App extends Component {
       .catch(error => this.setState({ error }))
   }
 
+  updateBookmark = updatedBookmark => {
+    const newBookmarks = this.state.bookmarks.map(bookmark =>
+      bookmark.id === updatedBookmark.id ? updatedBookmark : bookmark
+    )
+    console.log(updatedBookmark)
+    this.setState({
+      bookmarks: newBookmarks
+    })
+  }
+
   render() {
     const contextValue = {
       bookmarks: this.state.bookmarks,
       addBookmark: this.addBookmark,
       deleteBookmark: this.deleteBookmark,
-      setBookmarks: this.setBookmarks
+      updateBookmark: this.updateBookmark
     }
     return (
       <main className="App">
